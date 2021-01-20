@@ -14,16 +14,33 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  updateBranch:
-    name: Update staging branch
+  sync-branches:
     runs-on: ubuntu-latest
+    name: Syncing branches
     steps:
-    - uses: actions/checkout@master
-    - uses: Embraser01/update-git-branch-action@v1.0.0
-      with:
-        branch: staging/${GITHUB_REF##*/}
-        force: 1 # To push-force to the branch
-        githubToken: ${{ secrets.PAT_TOKEN }} # Github Token
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+      - name: Check output
+        run: echo ${{ steps.vars.outputs.short_ref }}
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+#       - name: Opening pull request
+#         id: pull
+#         uses: tretuna/sync-branches@1.2.0
+#         with:
+#           GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
+#           FROM_BRANCH: ${{steps.vars.outputs.short_ref}}
+#           TO_BRANCH: staging/${{steps.vars.outputs.short_ref}}
+      - name: Merge development -> staging
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: ${{steps.vars.outputs.short_ref}}
+          target_branch: staging/${{steps.vars.outputs.short_ref}}
+          github_token: ${{secrets.PAT_TOKEN}}
