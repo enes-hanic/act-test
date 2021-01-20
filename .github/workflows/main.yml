@@ -30,10 +30,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Opening pull request
-        id: pull
-        uses: tretuna/sync-branches@1.2.0
+#       - name: Opening pull request
+#         id: pull
+#         uses: tretuna/sync-branches@1.2.0
+#         with:
+#           GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
+#           FROM_BRANCH: ${{steps.vars.outputs.short_ref}}
+#           TO_BRANCH: staging/${{steps.vars.outputs.short_ref}}
+      - name: Merge development -> staging
+        uses: devmasx/merge-branch@v1.3.1
         with:
-          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
-          FROM_BRANCH: ${{steps.vars.outputs.short_ref}}
-          TO_BRANCH: staging/${{steps.vars.outputs.short_ref}}
+          type: now
+          from_branch: ${{steps.vars.outputs.short_ref}}
+          target_branch: staging/${{steps.vars.outputs.short_ref}}
+          github_token: ${{secrets.PAT_TOKEN}}
