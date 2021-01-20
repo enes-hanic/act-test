@@ -29,10 +29,21 @@ jobs:
           target_branch: staging/${GITHUB_REF##*/}
           github_token: ${{ secrets.PAT_TOKEN }}
 
-#       - name: Merge staging -> uat
-#         uses: devmasx/merge-branch@v1.3.1
-#         with:
-#           type: now
-#           from_branch: staging
-#           target_branch: uat
-#           github_token: ${{ github.token }}
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.2.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: ${GITHUB_REF##*/}
+          TO_BRANCH: staging/${GITHUB_REF##*/}
