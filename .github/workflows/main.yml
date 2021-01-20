@@ -29,6 +29,6 @@ jobs:
         id: pull
         uses: tretuna/sync-branches@1.2.0
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
           FROM_BRANCH: ${GITHUB_REF##*/}
           TO_BRANCH: staging/${GITHUB_REF##*/}
