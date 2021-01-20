@@ -16,14 +16,23 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  updateBranch:
-    name: Update staging branch
+  sync-branch:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: Embraser01/update-git-branch-action@v1.0.0
-      with:
-        branch: staging/${GITHUB_REF##*/}
-        force: 1 # To push-force to the branch
-        githubToken: ${{ secrets.PAT_TOKEN }} # Github Token
+      - uses: actions/checkout@master
+
+      - name: Merge client master -> client staging
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: ${GITHUB_REF##*/}
+          target_branch: staging/${GITHUB_REF##*/}
+          github_token: ${{ secrets.PAT_TOKEN }}
+
+#       - name: Merge staging -> uat
+#         uses: devmasx/merge-branch@v1.3.1
+#         with:
+#           type: now
+#           from_branch: staging
+#           target_branch: uat
+#           github_token: ${{ github.token }}
