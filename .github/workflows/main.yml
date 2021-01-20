@@ -21,6 +21,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+      - name: Check output
+        run: echo ${{ steps.vars.outputs.short_ref }}
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
@@ -30,5 +35,5 @@ jobs:
         uses: tretuna/sync-branches@1.2.0
         with:
           GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
-          FROM_BRANCH: ${GITHUB_REF##*/}
-          TO_BRANCH: staging/${GITHUB_REF##*/}
+          FROM_BRANCH: ${{steps.vars.outputs.short_ref}}
+          TO_BRANCH: staging/${{steps.vars.outputs.short_ref}}
