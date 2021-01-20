@@ -14,21 +14,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  sync-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-
-      - name: Merge client master -> client staging
-        uses: devmasx/merge-branch@v1.3.1
-        with:
-          type: now
-          from_branch: ${GITHUB_REF##*/}
-          target_branch: staging/${GITHUB_REF##*/}
-          github_token: ${{ secrets.PAT_TOKEN }}
-
 jobs:
   sync-branches:
     runs-on: ubuntu-latest
