@@ -17,4 +17,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
-          branch: staging/${{steps.vars.outputs.short_ref}}
+          branch: staging/${{github.event.ref}}
