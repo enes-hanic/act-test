@@ -1,17 +1,10 @@
-# This is a basic workflow to help you get started with Actions
+name: Update staging branch
 
-name: CI
-
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:
       - site9-**-newcart
-#   pull_request:
-#     branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
+      - site9-**-newtheme
   workflow_dispatch:
 
 jobs:
@@ -24,19 +17,10 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
-      - name: Check output
-        run: echo ${{ steps.vars.outputs.short_ref }}
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
           node-version: 12
-#       - name: Opening pull request
-#         id: pull
-#         uses: tretuna/sync-branches@1.2.0
-#         with:
-#           GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
-#           FROM_BRANCH: ${{steps.vars.outputs.short_ref}}
-#           TO_BRANCH: staging/${{steps.vars.outputs.short_ref}}
       - name: Merge development -> staging
         uses: devmasx/merge-branch@v1.3.1
         with:
